@@ -10,7 +10,6 @@ from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
 import rpy2
 from sklearn.feature_extraction.text import TfidfTransformer
-import tensorflow as tf
 from rpy2.robjects import pandas2ri
 
 
@@ -74,6 +73,8 @@ pd_lengths.reset_index(inplace=True)
 pd_lengths.columns = ['contig_id','contig_length']
 pd_contigs_info = pd.merge(pd_accessions,pd_lengths,on=['contig_id'])
 pd_contigs_info
+
+import tensorflow as tf
 
 #Create class defining single classifier
 class tf_classif:
