@@ -15,6 +15,10 @@ Requirements:
 
 
 PlasFlow accepts fasta files as input. Possible options are:
+
 --input - specifies input  fasta file with assembly contigs to classify [required]
+
 --output - should be tsv file with the tabular output of classification [required]
+
 --threshold - manually specified threshold for probability filtering (default = 0.7)
+
