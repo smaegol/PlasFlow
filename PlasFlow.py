@@ -1,39 +1,49 @@
 #!/usr/bin/env python
 
-#http://sebastianraschka.com/Articles/2014_ensemble_classifier.html
-import argparse
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
 import os, sys
+import argparse
+
+
+#parse command line arguments
+parser = argparse.ArgumentParser(description='PlasFlow - predicting plasmid sequences in metagenomic data using genome signatures. PlasFlow is based on the TensorFlow artificial neural network classifier')
+
+parser.add_argument('--input', dest='inputfile', action='store', help='Input fasta file with sequences to classify (required)',required=True)
+parser.add_argument('--output', dest='outputfile', action='store', help='Output file with classification results (required)',required=True)
+parser.add_argument('--threshold', dest='threshold', action='store', type=float, help='Threshold for probability filtering (default=0.7)',default=0.7)
+parser.add_argument('--labels', dest='labels', action='store', help='Custom labels file')
+
+args = parser.parse_args()
+
 import numpy as np
 import pandas as pd
 from array import array
+import rpy2
 from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
-import rpy2
 from sklearn.feature_extraction.text import TfidfTransformer
 from rpy2.robjects import pandas2ri
-
-
-
 import re
-from Bio import SeqIO
 
 
+#srcipt path is required to find the location of models used for classification (script_path/models)
 script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 r = robjects.r
-
-#hidden = [20,20]
-
-#parse command line arguments
-parser = argparse.ArgumentParser(description='Classify data using Tensorflow model')
-
-parser.add_argument('--input', dest='inputfile', action='store', help='input fasta file with sequences to classify (required)',required=True)
-parser.add_argument('--output', dest='outputfile', action='store', help='Output of classification (required)',required=True)
-parser.add_argument('--threshold', dest='threshold', action='store', type=float, help='threshold for probability filtering (default=0.7)',default=0.7)
-parser.add_argument('--labels', dest='labels', action='store', help='custom labels file')
-#parser.add_argument('--outputproba', dest='outputfileproba', action='store', help='Output of classification (probabilities)',required=False)
-args = parser.parse_args()
-
 
 # import Biostrings package for kmer quantification
 biostrings = importr('Biostrings')
@@ -45,6 +55,7 @@ else:
 	labels_df = pd.read_csv(script_path+'/models/class_labels_df.tsv',sep="\t")
 
 
+#number of classes in the labels file - should equal the number of classes in trained model, otherwise an error will be thrown on the later step
 no_classes = labels_df.shape[0]
 
 
@@ -53,11 +64,11 @@ inputfile = args.inputfile
 
 print("Importing sequences")
 #read data to classify and quanitify kmers
-test_data = r.readDNAStringSet(inputfile)
-no_sequences = r.length(test_data)
-print("Imported sequences:",no_sequences)
-accessionsA = r.names(test_data)
-accessions = r.sub("(\S*)\s.*","\\1",accessionsA,perl=True)
+input_data = r.readDNAStringSet(inputfile)
+no_sequences = r.length(input_data)
+print("Imported ",no_sequences," sequences")
+#get accessions of files
+accessions = r.sub("(\S*)\s.*","\\1",r.names(input_data),perl=True)
 
 #create pandas frame with info about contigs (id, name, length)
 pd_accessions = pandas2ri.ri2py(accessions)
@@ -65,7 +76,7 @@ pd_accessions = pd.DataFrame(pd_accessions)
 pd_accessions.index.name = 'contig_name'
 pd_accessions.reset_index(inplace=True)
 pd_accessions.columns = ['contig_id','contig_name']
-lengths = r.width(test_data)
+lengths = r.width(input_data)
 pd_lengths = pandas2ri.ri2py(lengths)
 pd_lengths = pd.DataFrame(pd_lengths)
 pd_lengths.index.name = 'contig_id'
@@ -73,6 +84,7 @@ pd_lengths.reset_index(inplace=True)
 pd_lengths.columns = ['contig_id','contig_length']
 pd_contigs_info = pd.merge(pd_accessions,pd_lengths,on=['contig_id'])
 pd_contigs_info
+
 
 import tensorflow as tf
 
@@ -213,20 +225,20 @@ class TF_Vote_Classifier:
 			return 0;
 		
 
+#classifiers used in PlasFlow (2 hidden layers with 20 neurons in each for 5 and 6-mers and 1 hidden layer with 30 neurons for 7-mers) 
 
 kmer5_20_20 = tf_classif(5,"20_20")
 kmer6_20_20 = tf_classif(6,"20_20")
 kmer7_30 = tf_classif(7,"30")
 
+#voting classifier
 vote_class = TF_Vote_Classifier(clfs=[kmer5_20_20,kmer6_20_20,kmer7_30])
 
-vote_proba = vote_class.predict_proba(test_data)
-vote = vote_class.predict(test_data)
-
-individual_probas = vote_class.return_individual_probas(test_data)
-individual_classes = vote_class.return_individual_classes(test_data)
+vote_proba = vote_class.predict_proba(input_data)
+vote = vote_class.predict(input_data)
 
 
+#results pandas dataframe:
 pd_n = pd.DataFrame(vote)
 #add columns with contig_id
 pd_n.index.name = 'contig_id'
@@ -246,6 +258,7 @@ results_merged_proba_with_names = pd.merge(pd_contigs_info,results_merged_proba,
 
 
 print("Filtering by probability threshold",args.threshold)
+
 for index,row in results_merged_proba_with_names.iterrows():
 	label_name = row.label
 	taxname = label_name.split(".",1)[1]
@@ -268,12 +281,7 @@ for index,row in results_merged_proba_with_names.iterrows():
 			temp = results_merged_proba_with_names.set_value(index,'label','unclassified.unclassified')
 
 
-
-
-
 results_merged_proba_with_names.to_csv(args.outputfile, sep='\t')
-
-
 
 taxons = {}
 plasmids = {}
@@ -296,7 +304,6 @@ for index,row in results_merged_proba_with_names.iterrows():
 	plasmid_column.append(plasmid)
 
 
-
 plasmids_pd = pd.DataFrame.from_dict(plasmids,orient="index")
 taxons_pd = pd.DataFrame.from_dict(taxons,orient="index")
 
@@ -307,6 +314,8 @@ print("\nResulting plasmid sequences prediction:")
 print(plasmids_pd)
 print("\nResulting taxonomical assignment:")
 print(taxons_pd)
+
+from Bio import SeqIO
 
 print("\nOutputting fasta files with classified sequences")
 
