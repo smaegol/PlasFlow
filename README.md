@@ -46,10 +46,10 @@ PlasFlow is designed to take a metagenomic assembly and identify contigs which m
 
 Options available in PlasFlow include:
 * `--input` - specifies input  fasta file with assembly contigs to classify [required]
-* `--output` - should be tsv file with the tabular output of classification [required]
+* `--output` - a name of the tsv file with the tabular output of classification [required]
 * `--threshold` - manually specified threshold for probability filtering (default = 0.7)
 
-To invoke PlasFlow on `test.fasta` dataset simply:
+To invoke PlasFlow on `test.fasta` dataset (available in the test folder) simply:
 
     PlasFlow.py --input test.fasta --output test.fasta.plasflow_predictions.tsv --threshold 0.7
 
