@@ -100,4 +100,4 @@ Test dataset is located in the `test` folder (file `Citrobacter_freundii_strain_
 
 Detailed information concerning the alogrithm and assumptions on which the PlasFlow is based can be found in the publication "*PlasFlow - Predicting Plasmid Sequences in Metagenomic Data Using Genome Signatures*" (*Nucleic Acids Research*, submitted). The flowchart illustrating major steps of training and prediction is shown below
 
-![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/flowchart.png)
+![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/blob/master/flowchart.png)
