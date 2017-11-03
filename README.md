@@ -2,6 +2,19 @@
 
 PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions.
 
+
+# Table of contents
+
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Conda-based](https://github.com/smaegol/PlasFlow#conda-based---recommended)
+    - [Pip installer](https://github.com/smaegol/PlasFlow#pip-installer)
+    - [Manual installation](https://github.com/smaegol/PlasFlow#manual-installation)
+  - [Getting started](https://github.com/smaegol/PlasFlow#getting-started)
+  - [Output](https://github.com/smaegol/PlasFlow#output)
+  - [Test dataset](https://github.com/smaegol/PlasFlow#test-dataset)
+  - [Detailed information](https://github.com/smaegol/PlasFlow#detailed-information)
+
 ## Requirements:
 
 - Python 3.5
