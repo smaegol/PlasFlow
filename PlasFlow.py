@@ -36,11 +36,16 @@ parser.add_argument('--threshold', dest='threshold', action='store', type=float,
                     help='Threshold for probability filtering (default=0.7)', default=0.7)
 parser.add_argument('--labels', dest='labels',
                     action='store', help='Custom labels file')
+parser.add_argument('--models', dest='models',
+                    action='store', help='Custom models localization')
+
 
 args = parser.parse_args()
 
 import numpy as np
 import pandas as pd
+import rpy2
+#rpy2.rinterface.set_initoptions(('rpy2', '--no-save', '--no-restore', '--quiet'))
 from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
@@ -49,6 +54,11 @@ import re
 
 # srcipt path is required to find the location of models used for classification (script_path/models)
 script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+if(args.models):
+    models_path = args.models
+else:
+    models_path = script_path + '/models'
 
 r = robjects.r
 
@@ -60,7 +70,7 @@ if (args.labels):
     labels_df = pd.read_csv(args.labels, sep="\t")
 else:
     labels_df = pd.read_csv(
-        script_path + '/models/class_labels_df.tsv', sep="\t")
+        models_path + '/class_labels_df.tsv', sep="\t")
 
 
 # number of classes in the labels file - should equal the number of classes in trained model, otherwise an error will be thrown on the later step
@@ -107,28 +117,28 @@ class tf_classif:
             self.hidden = [30]
         elif (hidden == "20_20"):
             self.hidden = [20, 20]
-        #set locations of models
+        # set locations of models
         if (kmer == 5):
             if(hidden == "30"):
-                self.modeldir = script_path + "/models/kmer5_split_30_neurons_relu/"
+                self.modeldir = models_path+ "/kmer5_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = script_path + "/models/kmer5_split_20_20_neurons_relu/"
+                self.modeldir = models_path+ "/kmer5_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()
         elif (kmer == 6):
             if(hidden == "30"):
-                self.modeldir = script_path + "/models/kmer6_split_30_neurons_relu/"
+                self.modeldir = models_path+ "/kmer6_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = script_path + "/models/kmer6_split_20_20_neurons_relu/"
+                self.modeldir = models_path+ "/kmer6_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()
         elif (kmer == 7):
             if(hidden == "30"):
-                self.modeldir = script_path + "/models/kmer7_split_30_neurons_relu/"
+                self.modeldir = models_path+ "/kmer7_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = script_path + "/models/kmer7_split_20_20_neurons_relu/"
+                self.modeldir = models_path+ "/kmer7_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()

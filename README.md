@@ -10,22 +10,22 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
   - Scikit-learn 0.18.1
   - Numpy
   - Pandas
-  - TensorFlow
+  - [TensorFlow 0.10.0](https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl)
   - rpy2
+  - scipy
 
 - R 3.25
 
 - R packages:
 
-  - Biostrings
+  - [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html)
 
 ## Installation
 
-PlasFlow can be easily installed as an Anaconda package from my Anaconda channel using:
+##### Conda-based - recommended
 
-```
-conda install plasflow -c smaegol
-```
+Conda is recommended option for installation as it properly manage all dependencies and allows installation without messing with other packages installed.
+Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
 
 To exclude the possibility of dependencies conflicts its encouraged to create spearate conda environment for Plasflow using command:
 
@@ -33,17 +33,47 @@ To exclude the possibility of dependencies conflicts its encouraged to create sp
 conda create --name plasflow python=3.5
 ```
 
+Python 3.5 is required becuase of TensorFlow requirements.
+
+
 to activate created environment type:
 
 ```
 source activate plasflow
 ```
 
-When you decide to finish tour work with PlasFlow, you can simply deactivate current anaconda environment with command:
+PlasFlow can be easily installed as an Anaconda package from my Anaconda channel using:
+
+```
+conda install plasflow -c smaegol
+```
+
+When you decide to finish your work with PlasFlow, you can simply deactivate current anaconda environment with command:
 
 ```
 source deactivate
 ```
+
+##### Pip installer
+
+There is a possibility of pip based installation. However, some requirements have to be met:
+1. Python 3.5 is required (due to TensorFlow requirements)
+2. TensorFlow has to be installed manually:
+
+```
+pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl
+```
+
+then install PlasFlow with
+
+```
+pip install plasflow
+```
+
+However, models used for prediction have to be downloaded separately.
+
+
+##### Manual installation
 
 Of course, PlasFlow repo can be cloned using
 
@@ -52,6 +82,20 @@ git clone https://github.com/smaegol/PlasFlow
 ```
 
 but in that case all dependencies have to be installed manually.
+TensorFlow can be installed as specified above:
+
+```
+pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl
+```
+
+python dependencies can be installed using pip:
+
+```
+pip install numpy pandas scipy rpy2 scikit-learn
+```
+
+to install R Biostrings go to https://bioconductor.org/packages/release/bioc/html/Biostrings.html and follow instructions therein
+
 
 ## Getting started
 
