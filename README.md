@@ -15,7 +15,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 - [Output](#output)
 - [Test dataset](#test-dataset)
 - [Detailed information](#detailed-information)
-- [TBD]($tbd)
+- [TBD](#tbd)
 
 ## Requirements:
 
