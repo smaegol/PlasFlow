@@ -2,18 +2,19 @@
 
 PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions.
 
-
 # Table of contents
 
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-    - [Conda-based](https://github.com/smaegol/PlasFlow#conda-based---recommended)
-    - [Pip installer](https://github.com/smaegol/PlasFlow#pip-installer)
-    - [Manual installation](https://github.com/smaegol/PlasFlow#manual-installation)
-  - [Getting started](https://github.com/smaegol/PlasFlow#getting-started)
-  - [Output](https://github.com/smaegol/PlasFlow#output)
-  - [Test dataset](https://github.com/smaegol/PlasFlow#test-dataset)
-  - [Detailed information](https://github.com/smaegol/PlasFlow#detailed-information)
+- [Requirements](#requirements)
+- [Installation](#installation)
+
+  - [Conda-based](#conda-based---recommended)
+  - [Pip installer](#pip-installer)
+  - [Manual installation](#manual-installation)
+
+- [Getting started](#getting-started)
+- [Output](#output)
+- [Test dataset](#test-dataset)
+- [Detailed information](#detailed-information)
 
 ## Requirements:
 
@@ -35,10 +36,9 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 
 ## Installation
 
-##### Conda-based - recommended
+### Conda-based - recommended
 
-Conda is recommended option for installation as it properly manage all dependencies and allows installation without messing with other packages installed.
-Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
+Conda is recommended option for installation as it properly manage all dependencies and allows installation without messing with other packages installed. Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
 
 To exclude the possibility of dependencies conflicts its encouraged to create spearate conda environment for Plasflow using command:
 
@@ -47,7 +47,6 @@ conda create --name plasflow python=3.5
 ```
 
 Python 3.5 is required becuase of TensorFlow requirements.
-
 
 to activate created environment type:
 
@@ -67,9 +66,10 @@ When you decide to finish your work with PlasFlow, you can simply deactivate cur
 source deactivate
 ```
 
-##### Pip installer
+### Pip installer
 
 There is a possibility of pip based installation. However, some requirements have to be met:
+
 1. Python 3.5 is required (due to TensorFlow requirements)
 2. TensorFlow has to be installed manually:
 
@@ -85,8 +85,7 @@ pip install plasflow
 
 However, models used for prediction have to be downloaded separately.
 
-
-##### Manual installation
+### Manual installation
 
 Of course, PlasFlow repo can be cloned using
 
@@ -94,8 +93,7 @@ Of course, PlasFlow repo can be cloned using
 git clone https://github.com/smaegol/PlasFlow
 ```
 
-but in that case all dependencies have to be installed manually.
-TensorFlow can be installed as specified above:
+but in that case all dependencies have to be installed manually. TensorFlow can be installed as specified above:
 
 ```
 pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl
@@ -107,8 +105,7 @@ python dependencies can be installed using pip:
 pip install numpy pandas scipy rpy2 scikit-learn
 ```
 
-to install R Biostrings go to https://bioconductor.org/packages/release/bioc/html/Biostrings.html and follow instructions therein
-
+to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/html/Biostrings.html> and follow instructions therein
 
 ## Getting started
 
@@ -132,7 +129,7 @@ The most important output of PlasFlow is a tabular file containing all predictio
 
 contig_id | contig_name | contig_length | id | label | ...
 --------- | ----------- | ------------- | -- | ----- | ---
-|
+          |
 
 where:
 
@@ -155,6 +152,6 @@ Test dataset is located in the `test` folder (file `Citrobacter_freundii_strain_
 
 ## Detailed information
 
-Detailed information concerning the alogrithm and assumptions on which the PlasFlow is based can be found in the publication "*PlasFlow - Predicting Plasmid Sequences in Metagenomic Data Using Genome Signatures*" (*Nucleic Acids Research*, submitted). The flowchart illustrating major steps of training and prediction is shown below
+Detailed information concerning the alogrithm and assumptions on which the PlasFlow is based can be found in the publication "_PlasFlow - Predicting Plasmid Sequences in Metagenomic Data Using Genome Signatures_" (_Nucleic Acids Research_, submitted). The flowchart illustrating major steps of training and prediction is shown below
 
 ![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/blob/master/flowchart.png)
