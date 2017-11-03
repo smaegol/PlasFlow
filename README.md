@@ -40,7 +40,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 
 ### Conda-based - recommended
 
-Conda is recommended option for installation as it properly manage all dependencies and allows installation without messing with other packages installed. Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
+Conda is recommended option for installation as it properly resolve all dependencies (including R and Biostrings) and allows for installation without messing with other packages installed. Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
 
 To exclude the possibility of dependencies conflicts its encouraged to create spearate conda environment for Plasflow using command:
 
@@ -61,6 +61,8 @@ PlasFlow can be easily installed as an Anaconda package from my Anaconda channel
 ```
 conda install plasflow -c smaegol
 ```
+
+With this command all required dependencies are installed into created conda environment. When installation is finished PlasFlow can be invoked as described in the [Getting started](#getting-started) section.
 
 When you decide to finish your work with PlasFlow, you can simply deactivate current anaconda environment with command:
 
@@ -113,11 +115,15 @@ to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/ht
 
 PlasFlow is designed to take a metagenomic assembly and identify contigs which may come from plasmids. It outputs several files, from which the most important is a tabular file containing all predictions (specified with `--output` option).
 
+
+
 Options available in PlasFlow include:
 
 - `--input` - specifies input fasta file with assembly contigs to classify [required]
 - `--output` - a name of the tsv file with the tabular output of classification [required]
 - `--threshold` - manually specified threshold for probability filtering (default = 0.7)
+- `--labels` - manually specified custom location of labels file (used for translation from numeric output to actual class names)
+- `--models` - custom location of models used for prediction (have to be specified if PlasFlow was installed using pip)
 
 To invoke PlasFlow on `test.fasta` dataset (available in the test folder) simply:
 

@@ -55,11 +55,14 @@ import re
 # srcipt path is required to find the location of models used for classification (script_path/models)
 script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
+#if custom models location is given use it
 if(args.models):
     models_path = args.models
 else:
+    #else - expect to find models in the place where PlasFlow was installed
     models_path = script_path + '/models'
 
+#initialize rpy2
 r = robjects.r
 
 # import Biostrings package for kmer quantification
@@ -202,6 +205,7 @@ class tf_classif:
 
 
 # class for voting classifier
+#based on http://sebastianraschka.com/Articles/2014_ensemble_classifier.html
 class TF_Vote_Classifier:
     """Voting classifier class."""
 
