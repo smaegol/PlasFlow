@@ -15,6 +15,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 - [Output](#output)
 - [Test dataset](#test-dataset)
 - [Detailed information](#detailed-information)
+- [TBD]($tbd)
 
 ## Requirements:
 
@@ -128,9 +129,8 @@ PlasFlow.py --input test.fasta --output test.fasta.plasflow_predictions.tsv --th
 
 The most important output of PlasFlow is a tabular file containing all predictions (specified with `--output` option), consiting of several columns including:
 
-contig_id | contig_name | contig_length | id | label | ...
---------- | ----------- | ------------- | -- | ----- | ---
-          |
+contig_id | contig_name | contig_length | id | label | ... |
+--------- | ----------- | ------------- | -- | ----- | --- |
 
 where:
 
@@ -156,3 +156,8 @@ Test dataset is located in the `test` folder (file `Citrobacter_freundii_strain_
 Detailed information concerning the alogrithm and assumptions on which the PlasFlow is based can be found in the publication "_PlasFlow - Predicting Plasmid Sequences in Metagenomic Data Using Genome Signatures_" (_Nucleic Acids Research_, submitted). The flowchart illustrating major steps of training and prediction is shown below
 
 ![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/blob/master/flowchart.png)
+
+
+## TBD
+
+In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include *Archaea* sequences (which are missed now) in the models, we plan to train new models with the last TensorFlow version and release new version at the beginning of 2018.
