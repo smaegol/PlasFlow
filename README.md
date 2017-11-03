@@ -164,6 +164,8 @@ Detailed information concerning the alogrithm and assumptions on which the PlasF
 ![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/blob/master/flowchart.png)
 
 
+All models tested and described in the manuscript can be found in the seperate repository: https://github.com/smaegol/PlasFlow_models
+
 ## TBD
 
 In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include *Archaea* sequences (which are missed now) in the models, we plan to train new models with the last TensorFlow version and release new version at the beginning of 2018.
