@@ -27,6 +27,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
   - [TensorFlow 0.10.0](https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl)
   - rpy2
   - scipy
+  - biopython
 
 - R 3.25
 
@@ -102,7 +103,7 @@ pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.
 python dependencies can be installed using pip:
 
 ```
-pip install numpy pandas scipy rpy2 scikit-learn
+pip install numpy pandas scipy rpy2 scikit-learn biopython
 ```
 
 to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/html/Biostrings.html> and follow instructions therein
@@ -148,7 +149,7 @@ Additionaly, PlasFlow produces fasta files containing input sequences binned to 
 
 ## Test dataset
 
-Test dataset is located in the `test` folder (file `Citrobacter_freundii_strain_CAV1321_scaffolds.fasta`). It is the SPAdes 3.9.1 assembly of Citrobacter freundii strain CAV1321 genome (NCBI assembly ID: GCA_001022155.1), which contains 1 chromosome and 9 plasmids. In the `test_output` subfolder results of classification can be found
+Test dataset is located in the `test` folder (file `Citrobacter_freundii_strain_CAV1321_scaffolds.fasta`). It is the SPAdes 3.9.1 assembly of Citrobacter freundii strain CAV1321 genome (NCBI assembly ID: GCA_001022155.1), which contains 1 chromosome and 9 plasmids. In the `test_output` subfolder the results of classification can be found in the form of tsv file (`Citrobacter_freundii_strain_CAV1321_scaffolds.fasta.PlasFlow.tsv`) and fasta files containing identified bins (`Citrobacter_freundii_strain_CAV1321_scaffolds.fasta.PlasFlow.tsv_chromosomes.fasta`, `Citrobacter_freundii_strain_CAV1321_scaffolds.fasta.PlasFlow.tsv_plasmids.fasta` and `Citrobacter_freundii_strain_CAV1321_scaffolds.fasta.PlasFlow.tsv_unclassified.fasta`)
 
 ## Detailed information
 
