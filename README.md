@@ -167,6 +167,7 @@ Detailed information concerning the alogrithm and assumptions on which the PlasF
 
 
 All models tested and described in the manuscript can be found in the seperate repository: https://github.com/smaegol/PlasFlow_models
+Scripts used for the preparation of training dataset and neural network training are available: https://github.com/smaegol/PlasFlow_processing
 
 ## TBD
 
