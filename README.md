@@ -1,4 +1,4 @@
-[![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://conda.anaconda.org/smaegol/plasflow)
+[![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://anaconda.org/smaegol/plasflow)
 
 # PlasFlow 1.0
 
@@ -170,7 +170,7 @@ Detailed information concerning the alogrithm and assumptions on which the PlasF
 
 All models tested and described in the manuscript can be found in the seperate repository: https://github.com/smaegol/PlasFlow_models
 
-Scripts used for the preparation of training dataset and neural network training are available: https://github.com/smaegol/PlasFlow_processing
+Scripts used for the preparation of training dataset and for neural network training are available: https://github.com/smaegol/PlasFlow_processing
 
 ## TBD
 
