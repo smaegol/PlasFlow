@@ -45,7 +45,6 @@ args = parser.parse_args()
 import numpy as np
 import pandas as pd
 import rpy2
-#rpy2.rinterface.set_initoptions(('rpy2', '--no-save', '--no-restore', '--quiet'))
 from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
