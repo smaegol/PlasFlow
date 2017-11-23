@@ -2,7 +2,7 @@
 
 # PlasFlow 1.0
 
-PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions. PlasFlow was submitted to *Nucleic Acids Research* and awaits peer-review.
+PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions. PlasFlow was submitted to _Nucleic Acids Research_ and awaits peer-review.
 
 # Table of contents
 
@@ -14,10 +14,12 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
   - [Manual installation](#manual-installation)
 
 - [Getting started](#getting-started)
+
 - [Output](#output)
 - [Test dataset](#test-dataset)
 - [Detailed information](#detailed-information)
 - [TBD](#tbd)
+- [Support](#support)
 
 ## Requirements:
 
@@ -113,13 +115,9 @@ pip install numpy pandas scipy rpy2 scikit-learn biopython
 
 to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/html/Biostrings.html> and follow instructions therein.
 
-
-
 ## Getting started
 
 PlasFlow is designed to take a metagenomic assembly and identify contigs which may come from plasmids. It outputs several files, from which the most important is a tabular file containing all predictions (specified with `--output` option).
-
-
 
 Options available in PlasFlow include:
 
@@ -139,8 +137,9 @@ PlasFlow.py --input test.fasta --output test.fasta.plasflow_predictions.tsv --th
 
 The most important output of PlasFlow is a tabular file containing all predictions (specified with `--output` option), consiting of several columns including:
 
-contig_id | contig_name | contig_length | id | label | ... |
---------- | ----------- | ------------- | -- | ----- | --- |
+contig_id | contig_name | contig_length | id | label | ...
+--------- | ----------- | ------------- | -- | ----- | ---
+|
 
 where:
 
@@ -167,11 +166,14 @@ Detailed information concerning the alogrithm and assumptions on which the PlasF
 
 ![PlasFlow Flowchart](https://github.com/smaegol/PlasFlow/blob/master/flowchart.png)
 
+All models tested and described in the manuscript can be found in the seperate repository: <https://github.com/smaegol/PlasFlow_models>
 
-All models tested and described in the manuscript can be found in the seperate repository: https://github.com/smaegol/PlasFlow_models
-
-Scripts used for the preparation of training dataset and for neural network training are available: https://github.com/smaegol/PlasFlow_processing
+Scripts used for the preparation of training dataset and for neural network training are available: <https://github.com/smaegol/PlasFlow_processing>
 
 ## TBD
 
-In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include *Archaea* sequences (which are missed now) in the models, we plan to train new models with the latest TensorFlow version and release new version of PlasFlow at the beginning of 2018.
+In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include _Archaea_ sequences (which are missed now) in the models, we plan to train new models with the latest TensorFlow version and release new version of PlasFlow at the beginning of 2018.
+
+## Support
+
+Any issues connected with the PlasFlow should be addressed to Pawel Krawczyk (p.krawczyk (at) ibb.waw.pl).
