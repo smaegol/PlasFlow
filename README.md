@@ -46,6 +46,13 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 
 Conda is recommended option for installation as it properly resolve all dependencies (including R and Biostrings) and allows for installation without messing with other packages installed. Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
 
+
+After the installation it is required to add [bioconda](https://bioconda.github.io/) channel, required for [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html) package installation:
+
+```
+conda config --add channels bioconda
+```
+
 To exclude the possibility of dependencies conflicts its encouraged to create spearate conda environment for Plasflow using command:
 
 ```
