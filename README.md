@@ -156,7 +156,7 @@ The most important output of PlasFlow is a tabular file containing all predictio
 
 contig_id | contig_name | contig_length | id | label | ...
 --------- | ----------- | ------------- | -- | ----- | ---
-          |
+
 
 where:
 
