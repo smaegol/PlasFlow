@@ -144,7 +144,7 @@ Options available in PlasFlow include:
 - `--labels` - manually specified custom location of labels file (used for translation from numeric output to actual class names)
 - `--models` - custom location of models used for prediction (have to be specified if PlasFlow was installed using pip)
 
-To invoke PlasFlow on `test.fasta` dataset (available in the test folder) simply:
+To invoke PlasFlow on `test.fasta` dataset (available in the test folder) simply copy the test.fasta file to you current working directory and type:
 
 ```
 PlasFlow.py --input test.fasta --output test.fasta.plasflow_predictions.tsv --threshold 0.7
