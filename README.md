@@ -16,6 +16,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 - [Getting started](#getting-started)
 
 - [Output](#output)
+
 - [Test dataset](#test-dataset)
 - [Detailed information](#detailed-information)
 - [TBD](#tbd)
@@ -45,7 +46,6 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 ### Conda-based - recommended
 
 Conda is recommended option for installation as it properly resolve all dependencies (including R and Biostrings) and allows for installation without messing with other packages installed. Conda can be used both as the [Anaconda](https://www.anaconda.com/download/), and [Miniconda](https://conda.io/miniconda.html) (which is easier to install and maintain).
-
 
 After the installation it is required to add [bioconda](https://bioconda.github.io/) channel, required for [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html) package installation:
 
@@ -126,6 +126,16 @@ to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/ht
 
 PlasFlow is designed to take a metagenomic assembly and identify contigs which may come from plasmids. It outputs several files, from which the most important is a tabular file containing all predictions (specified with `--output` option).
 
+Prior to the PlasFlow invocation it is highly recommended to filter sequences by length, leaving only those longer than 1000 kb. PlasFlow, similarly to other kmer-based methods, does not perform well on short sequences, as it is hard to get proper kmer coverage from them. Hence, results for short sequences are unreliable. As metagenomic assemblies usually contain large number of short contigs additional filtering test can improve results and speed up the PlasFlow. It can also prevent too high RAM usage.
+
+To filter sequences using provided Perl script type:
+
+```
+filter_sequences_by_length.pl -input input_dataset.fasta -output filtered_output.fasta -thresh sequence_length_threshold
+```
+
+where sequence length threshold have to be provided in base pairs. Filtered fasta file can be then used directly for PlasFlow prediction.
+
 Options available in PlasFlow include:
 
 - `--input` - specifies input fasta file with assembly contigs to classify [required]
@@ -146,7 +156,7 @@ The most important output of PlasFlow is a tabular file containing all predictio
 
 contig_id | contig_name | contig_length | id | label | ...
 --------- | ----------- | ------------- | -- | ----- | ---
-|
+          |
 
 where:
 

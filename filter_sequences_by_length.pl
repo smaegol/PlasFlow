@@ -31,7 +31,7 @@ my $length_threshold;
 
 # opis uzycia programu
 my $USAGE =
-"Filters sequences in multifasta file by length\n\nUsage of program:\n\n $0 [options] \n\t-input\t\tmultifasta file with sequences to be filtered\n\t-output\t\toutput file for filtered sequences \n\t-thresh\t\tsequence length threshold \n";
+"Filters sequences in multifasta file by length\n\nUsage of program:\n\n $0 [options] \n\t-input\t\tmultifasta file with sequences to be filtered\n\t-output\t\toutput file for filtered sequences \n\t-thresh\t\tsequence length threshold [bp]\n";
 
 #pobranie zmiennych z linii polecen
 unless (@ARGV) {
