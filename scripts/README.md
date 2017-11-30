@@ -73,7 +73,11 @@ To invoke Recycler prediction on any dataset it is required to have assembly gra
 To run the scripts it is required to have installed:
 
 - SPADes (can be obtained from its [website](http://bioinf.spbau.ru/spades))
+- BWA([4](https://www.ncbi.nlm.nih.gov/pubmed/19451168)) (can be obtained form its [website](http://bio-bwa.sourceforge.net/))
+- Samtools([5](https://www.ncbi.nlm.nih.gov/pubmed/19505943)) (can be obtained from the [website](http://samtools.sourceforge.net/))
 - Recycler
+
+All the paths have to be specified in the top section of the script.
 
 Run the script using:
 
@@ -88,3 +92,5 @@ SPAdes assembly will be run using provided input file and located in the output 
 1. Zhou, F., and Xu, Y. (2010). cBar: a computer program to distinguish plasmid-derived from chromosome-derived sequence fragments in metagenomics data. Bioinformatics 26, 2051–2052.
 2. Rozov, R., Brown Kav, A., Bogumil, D., Shterzer, N., Halperin, E., Mizrahi, I., and Shamir, R. (2017). Recycler: an algorithm for detecting plasmids from de novo assembly graphs. Bioinformatics 33, 475–482.
 3. Bankevich, A., Nurk, S., Antipov, D., Gurevich, A.A., Dvorkin, M., Kulikov, A.S., Lesin, V.M., Nikolenko, S.I., Pham, S., Prjibelski, A.D., et al. (2012). SPAdes: A New Genome Assembly Algorithm and Its Applications to Single-Cell Sequencing. Journal of Computational Biology 19, 455–477.
+4. Li, H., and Durbin, R. (2009). Fast and accurate short read alignment with Burrows–Wheeler transform. Bioinformatics 25, 1754–1760.
+5. Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., Marth, G., Abecasis, G., and Durbin, R. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics 25, 2078–2079.
