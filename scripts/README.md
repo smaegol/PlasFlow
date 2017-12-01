@@ -1,4 +1,4 @@
-Scripts used during the development of [PlasFlow](https://github.com/smaegol/PlasFlow).
+Scripts used during the development of [PlasFlow](https://github.com/smaegol/PlasFlow) and manuscript preparation.
 
 # Table of contents
 
@@ -85,7 +85,7 @@ Run the script using:
 bash calculate_recycler_predictions.sh -1 input_R1.fastq -2 input_R2.fastq
 ```
 
-SPAdes assembly will be run using provided input file and located in the output dir (`input_R1_spades`). Then the files required by Recycler are prepared and recycler is run. The output of Recycler (fasta with circular contigs) will be available in the `input_R1_spades/assembly_graph.cycs.fasta` file.
+SPAdes assembly will be run using provided input files and located in the output dir (`input_R1_spades`). Then the mapping of reads to contigs is done and Recycler is run. The output of Recycler (fasta with circular contigs) will be available in the `input_R1_spades/assembly_graph.cycs.fasta` file.
 
 ## REFERENCES
 
