@@ -136,6 +136,8 @@ filter_sequences_by_length.pl -input input_dataset.fasta -output filtered_output
 
 where sequence length threshold have to be provided in base pairs. Filtered fasta file can be then used directly for PlasFlow prediction.
 
+Due to a high RAM usage during the kmer frequencines calculation it is suggested to run calculations on data sets not larger than 50 000 sequences. We are working to improve this in the next release.
+
 Options available in PlasFlow include:
 
 - `--input` - specifies input fasta file with assembly contigs to classify [required]
