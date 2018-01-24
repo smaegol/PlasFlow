@@ -19,6 +19,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 
 - [Test dataset](#test-dataset)
 - [Detailed information](#detailed-information)
+- [Citation](#citation)
 - [TBD](#tbd)
 - [Support](#support)
 
@@ -191,6 +192,13 @@ Detailed information concerning the alogrithm and assumptions on which the PlasF
 All models tested and described in the manuscript can be found in the seperate repository: <https://github.com/smaegol/PlasFlow_models>
 
 Scripts used for the preparation of training dataset and for neural network training are available in the `scripts` subfolder as well in the separate repository: <https://github.com/smaegol/PlasFlow_processing>
+
+## Citation
+
+Please cite the following paper when using PlasFlow for your own research.
+
+> Krawczyk PS, Lipinski L, Dziembowski A.
+>  Nucleic Acids Res. 2018 Jan 13. doi: 10.1093/nar/gkx1321.
 
 ## TBD
 
