@@ -127,7 +127,7 @@ to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/ht
 
 PlasFlow is designed to take a metagenomic assembly and identify contigs which may come from plasmids. It outputs several files, from which the most important is a tabular file containing all predictions (specified with `--output` option).
 
-Prior to the PlasFlow invocation it is highly recommended to filter sequences by length, leaving only those longer than 1000 kb. PlasFlow, similarly to other kmer-based methods, does not perform well on short sequences, as it is hard to get proper kmer coverage from them. Hence, results for short sequences are unreliable. As metagenomic assemblies usually contain large number of short contigs additional filtering test can improve results and speed up the PlasFlow. It can also prevent too high RAM usage.
+Prior to the PlasFlow invocation it is highly recommended to filter sequences by length, leaving only those longer than 1000 bp. PlasFlow, similarly to other kmer-based methods, does not perform well on short sequences, as it is hard to get proper kmer coverage from them. Hence, results for short sequences are unreliable. As metagenomic assemblies usually contain large number of short contigs additional filtering test can improve results and speed up the PlasFlow. It can also prevent too high RAM usage.
 
 To filter sequences using provided Perl script type:
 
