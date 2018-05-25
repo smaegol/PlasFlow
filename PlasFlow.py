@@ -27,7 +27,7 @@ import argparse
 
 # parse command line arguments
 parser = argparse.ArgumentParser(
-    description='PlasFlow - predicting plasmid sequences in metagenomic data using genome signatures. PlasFlow is based on the TensorFlow artificial neural network classifier')
+    description='PlasFlow v.1.1 - predicting plasmid sequences in metagenomic data using genome signatures. PlasFlow is based on the TensorFlow artificial neural network classifier')
 
 parser.add_argument('--input', dest='inputfile', action='store',
                     help='Input fasta file with sequences to classify (required)', required=True)
