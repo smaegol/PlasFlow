@@ -41,9 +41,10 @@ If you still encounter problems with the new version, try to use smaller numbers
   - Numpy
   - Pandas
   - [TensorFlow 0.10.0](https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl)
-  - rpy2 >= 2.7.8
+  - rpy2 >= 2.8
   - scipy
   - biopython
+  - dateutil >= 2.5
 
 - R 3.25
 
