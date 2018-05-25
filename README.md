@@ -208,7 +208,7 @@ Scripts used for the preparation of training dataset and for neural network trai
 Please cite the following paper when using PlasFlow for your own research.
 
 > Krawczyk PS, Lipinski L, Dziembowski A.
->  Nucleic Acids Res. 2018 Jan 13. doi: 10.1093/nar/gkx1321.
+> Nucleic Acids Res. 2018 Apr 6;46(6):e35. doi: 10.1093/nar/gkx1321.
 
 ## TBD
 
