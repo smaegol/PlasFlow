@@ -2,6 +2,7 @@
 
 #######################################################################################
 ###                                                                                 ###
+###     PlasFlow 1.1                                                                ###
 ###     Copyright (C) 2017  Pawel Krawczyk (p.krawczyk@ibb.waw.pl)                  ###
 ###                                                                                 ###
 ###     This program is free software: you can redistribute it and/or modify        ###
@@ -38,7 +39,8 @@ parser.add_argument('--labels', dest='labels',
                     action='store', help='Custom labels file')
 parser.add_argument('--models', dest='models',
                     action='store', help='Custom models localization')
-
+parser.add_argument('--batch_size', dest='batch_size',
+                    action='store', default=25000, help='Batch size for large datasets')
 
 args = parser.parse_args()
 
@@ -49,7 +51,8 @@ from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 import re
-
+from Bio import SeqIO
+import gc
 
 # srcipt path is required to find the location of models used for classification (script_path/models)
 script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -61,11 +64,15 @@ else:
     #else - expect to find models in the place where PlasFlow was installed
     models_path = script_path + '/models'
 
+#store maximum number of sequence analyzed in the singl batch of kmer frequencies calculation
+max_sequences_per_batch = int(args.batch_size)
+
 #initialize rpy2
 r = robjects.r
 
 # import Biostrings package for kmer quantification
 biostrings = importr('Biostrings')
+base = importr('base')
 
 # import labels description
 if (args.labels):
@@ -78,14 +85,13 @@ else:
 # number of classes in the labels file - should equal the number of classes in trained model, otherwise an error will be thrown on the later step
 no_classes = labels_df.shape[0]
 
-
 # get input file with sequences to process
 inputfile = args.inputfile
 
 print("Importing sequences")
 # read data to classify and quanitify kmers
 input_data = r.readDNAStringSet(inputfile)
-no_sequences = r.length(input_data)
+no_sequences = r.length(input_data)[0]
 print("Imported ", no_sequences, " sequences")
 # get accessions of files
 accessions = r.sub("(\S*)\s.*", "\\1", r.names(input_data), perl=True)
@@ -104,6 +110,42 @@ pd_lengths.reset_index(inplace=True)
 pd_lengths.columns = ['contig_id', 'contig_length']
 pd_contigs_info = pd.merge(pd_accessions, pd_lengths, on=['contig_id'])
 pd_contigs_info
+
+#Explicit garbage collection to remove unneccessary R objects from memory
+r('rm(input_data)')
+r('rm(accessions)')
+r('rm(lengths)')
+base.gc()
+gc.collect()
+
+#based on http://biopython.org/wiki/Split_large_file
+def batch_iterator(iterator, batch_size):
+    """Returns lists of length batch_size.
+
+    This can be used on any iterator, for example to batch up
+    SeqRecord objects from Bio.SeqIO.parse(...), or to batch
+    Alignment objects from Bio.AlignIO.parse(...), or simply
+    lines from a file handle.
+
+    This is a generator function, and it returns lists of the
+    entries from the supplied iterator.  Each list will have
+    batch_size entries, although the final list may be shorter.
+    """
+    entry = True  # Make sure we loop once
+    while entry:
+        batch = []
+        while len(batch) < batch_size:
+            try:
+                entry = iterator.__next__()
+            except StopIteration:
+                entry = None
+            if entry is None:
+                # End of file
+                break
+            batch.append(entry)
+        if batch:
+            yield batch
+
 
 
 # Create class defining single classifier
@@ -148,21 +190,61 @@ class tf_classif:
             print("Wrong kmer number. Exiting...")
             sys.exit()
 
-    def calculate_freq(self, data):
+    def calculate_freq(self, input_data_path):
         """Calculate kmer frequencies and perform td-idf transformation."""
         kmer = self.kmer
-        print("Calculating kmer frequencies using kmer", kmer)
-        kmer_count = r.oligonucleotideFrequency(data, kmer)
-        self.no_features = kmer_count.ncol
+        import os.path
+        file_name = str(input_data_path) + "_kmer_" + str(kmer) + '_freqs.npy'
+        # Try to load previously saved frequncies (TF-IDF transformed)
+        if os.path.isfile(file_name):
+            test_tfidf_nd = np.load(file_name)
+            self.no_features = test_tfidf_nd.shape[1]
+            self.testing_data = test_tfidf_nd
+            print("Succesfully read previously calculated kmer frequencies for kmer", kmer)
+        #if previous calculations are not available - calculate frequencies
+        else:
+            print("Calculating kmer frequencies using kmer", kmer)
+            #if there is more sequences in input than it is allowed, split file in smaller chunks and process them separately
+            if (no_sequences>max_sequences_per_batch):
+                print("Due to large number of sequences in the input file, it is splitted to smaller chunks (maximum size: " + str(max_sequences_per_batch) + " sequences)")
+                #split input file:
+                record_iter = SeqIO.parse(open(input_data_path),"fasta")
+                for i, batch in enumerate(batch_iterator(record_iter, max_sequences_per_batch)):
+                    batch_filename = input_data_path + "_group_%i.fasta" % (i + 1)
+                    print("processing chunk:",str(i + 1))
+                    if os.path.isfile(batch_filename) is False: # if batch file not exists create one
+                        with open(batch_filename, "w") as handle:
+                            count = SeqIO.write(batch, handle, "fasta")
+                    #read
+                    temp_data = r.readDNAStringSet(batch_filename)
+                    kmer_count_temp = r.oligonucleotideFrequency(temp_data, kmer)
+                    kmer_count_temp_np = np.array(kmer_count_temp)
+                    #merge temporary matrices
+                    if i>0:
+                        kmer_count = np.concatenate((kmer_count,kmer_count_temp_np))
+                    else:
+                        kmer_count = kmer_count_temp_np
+            else:
+                #calculate single batch for low number of sequences
+                temp_data = r.readDNAStringSet(input_data_path)
+                kmer_count_r = r.oligonucleotideFrequency(temp_data, kmer)
+                kmer_count = np.array(kmer_count_r)
+            self.no_features = kmer_count.shape[1]
+            #Explicit garbage collection to remove unneccessary R objects from memory
+            r('rm(temp_data)')
+            r('rm(kmer_count_r)')
+            base.gc()
+            gc.collect()
 
-        print("Transforming kmer frequencies")
-        # Tfidf transform data
-        from sklearn.feature_extraction.text import TfidfTransformer
-        transformer = TfidfTransformer(smooth_idf=False)
-        test_tfidf = transformer.fit_transform(kmer_count)
-        test_tfidf_nd = test_tfidf.toarray()
-        self.testing_data = test_tfidf_nd
-
+            print("Transforming kmer frequencies")
+            # Tfidf transform data
+            from sklearn.feature_extraction.text import TfidfTransformer
+            transformer = TfidfTransformer(smooth_idf=False)
+            test_tfidf = transformer.fit_transform(kmer_count)
+            test_tfidf_nd = test_tfidf.toarray()
+            self.testing_data = test_tfidf_nd
+            print("Finished transforming, saving transformed values")
+            np.save(file_name,test_tfidf_nd)
     def predict_proba_tf(self, data):
         """Perform actual prediction (with probabilities)."""
         kmer = self.kmer
@@ -261,8 +343,8 @@ kmer7_30 = tf_classif(7, "30")
 # voting classifier
 vote_class = TF_Vote_Classifier(clfs=[kmer5_20_20, kmer6_20_20, kmer7_30])
 
-vote_proba = vote_class.predict_proba(input_data)
-vote = vote_class.predict(input_data)
+vote_proba = vote_class.predict_proba(inputfile)
+vote = vote_class.predict(inputfile)
 
 
 # results pandas dataframe:
@@ -291,6 +373,7 @@ for index, row in results_merged_proba_with_names.iterrows():
     label_name = row.label
     taxname = label_name.split(".", 1)[1]
 
+# TBD: FutureWarning: set_value is deprecated and will be removed in a future release. Please use .at[] or .iat[] accessors instead
     if row[label_name] < args.threshold:
         plasmids = row[[col for col in results_merged_proba_with_names.columns if re.match(
             r'^plasmid.*', col)]]
@@ -303,17 +386,21 @@ for index, row in results_merged_proba_with_names.iterrows():
             col for col in results_merged_proba_with_names.columns if re.match(my_regex, col)]]
         taxnamessum = taxnames.sum()
         if plasmidssum > args.threshold:
-            temp = results_merged_proba_with_names.set_value(
-                index, 'label', 'plasmid.unclassified')
+            #temp = results_merged_proba_with_names.set_value(
+            #    index, 'label', 'plasmid.unclassified')
+            results_merged_proba_with_names.at[index, 'label'] = 'plasmid.unclassified'
         elif chromosomessum > args.threshold:
-            temp = results_merged_proba_with_names.set_value(
-                index, 'label', 'chromosome.unclassified')
+        #    temp = results_merged_proba_with_names.set_value(
+        #        index, 'label', 'chromosome.unclassified')
+            results_merged_proba_with_names.at[index, 'label'] = 'chromosome.unclassified'
         elif taxnamessum > args.threshold:
-            temp = results_merged_proba_with_names.set_value(
-                index, 'label', 'unclassified.' + taxname)
+            #temp = results_merged_proba_with_names.set_value(
+            #    index, 'label', 'unclassified.' + taxname)
+            results_merged_proba_with_names.at[index, 'label'] = 'unclassified.' + taxname
         else:
-            temp = results_merged_proba_with_names.set_value(
-                index, 'label', 'unclassified.unclassified')
+            #temp = results_merged_proba_with_names.set_value(
+            #    index, 'label', 'unclassified.unclassified')
+            results_merged_proba_with_names.at[index, 'label'] = 'unclassified.unclassified'
 
 
 results_merged_proba_with_names.to_csv(args.outputfile, sep='\t')
@@ -350,7 +437,7 @@ print(plasmids_pd)
 print("\nResulting taxonomical assignment:")
 print(taxons_pd)
 
-from Bio import SeqIO
+
 
 print("\nOutputting fasta files with classified sequences")
 

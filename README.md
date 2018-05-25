@@ -1,11 +1,12 @@
 [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://anaconda.org/smaegol/plasflow) [![PyPI version](https://badge.fury.io/py/plasflow.svg)](https://badge.fury.io/py/plasflow)
 
-# PlasFlow 1.0
+# PlasFlow 1.1
 
 PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions. PlasFlow has been published in _Nucleic Acids Research_ (https://doi.org/10.1093/nar/gkx1321).
 
 # Table of contents
 
+- [News](#news)
 - [Requirements](#requirements)
 - [Installation](#installation)
 
@@ -23,6 +24,14 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
 - [TBD](#tbd)
 - [Support](#support)
 
+## News
+
+#### 2018-05-25 Version 1.1 released
+
+New version (1.1) released, which is better suited for large datasets. It can be downloaded from conda and pypi, but the simplest way to upgrade is to replace PlasFlow.py file in you previous installation with the current one.
+If you still encounter problems with the new version, try to use smaller numbers for the `--batch_size` option.
+
+
 ## Requirements:
 
 - Python 3.5
@@ -32,7 +41,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
   - Numpy
   - Pandas
   - [TensorFlow 0.10.0](https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp35-cp35m-linux_x86_64.whl)
-  - rpy2
+  - rpy2 >= 2.7.8
   - scipy
   - biopython
 
@@ -146,6 +155,7 @@ Options available in PlasFlow include:
 - `--threshold` - manually specified threshold for probability filtering (default = 0.7)
 - `--labels` - manually specified custom location of labels file (used for translation from numeric output to actual class names)
 - `--models` - custom location of models used for prediction (have to be specified if PlasFlow was installed using pip)
+- `--batch_size` - how many sequences can be used in the single batch of kmers frequency calculation
 
 
 ## Output
@@ -202,7 +212,7 @@ Please cite the following paper when using PlasFlow for your own research.
 
 ## TBD
 
-In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include _Archaea_ sequences (which are missed now) in the models, we plan to train new models with the latest TensorFlow version and release new version of PlasFlow at the beginning of 2018. We are working also on the optimization of the code to get smaller memory consumption on large datasets.
+In next releases we plan to retrain models using the most recent TensorFlow release. During the development of PlasFlow there was a lot of changes in the TensorFlow library and the newest version is not compatible with models trained for TensorFlow. However, retraining requires signficant computational effort and recoding. As we want to include _Archaea_ sequences (which are missed now) in the models, we plan to train new models with the latest TensorFlow version and release new version of PlasFlow in the second part of 2018.
 
 ## Support
 
