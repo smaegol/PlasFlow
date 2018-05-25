@@ -1,4 +1,5 @@
-[![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://anaconda.org/smaegol/plasflow) [![PyPI version](https://badge.fury.io/py/plasflow.svg)](https://badge.fury.io/py/plasflow)
+[![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://anaconda.org/smaegol/plasflow) [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/platforms.svg)](https://anaconda.org/smaegol/plasflow) [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/downloads.svg)](https://anaconda.org/smaegol/plasflow)
+[![PyPI](https://img.shields.io/pypi/v/plasflow.svg)](https://pypi.org/project/plasflow/1.1.0/)
 
 # PlasFlow 1.1
 
