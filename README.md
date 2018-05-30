@@ -85,6 +85,12 @@ to activate created environment type:
 source activate plasflow
 ```
 
+Mac users should install Tensorflow at this step (as osx-64 package is not present in default channels):
+
+```
+conda install -c jjhelmus tensorflow=0.10.0rc0
+```
+
 PlasFlow can be easily installed as an Anaconda package from my Anaconda channel using:
 
 ```
