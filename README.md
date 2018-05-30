@@ -65,7 +65,7 @@ After the installation it is required to add [bioconda](https://bioconda.github.
 conda config --add channels bioconda
 ```
 
-Sometimes it can be also required to add default conda channel (conda-forge):
+Sometimes it can be also required to add default conda channel ([conda-forge](https://conda-forge.org/)):
 
 ```
 conda config --add channels conda-forge
