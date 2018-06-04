@@ -86,7 +86,7 @@ to activate created environment type:
 source activate plasflow
 ```
 
-Mac users should install Tensorflow at this step (as osx-64 package is not present in default channels):
+Mac users should install Tensorflow at this step (as osx-64 package is not present in default channels). If you encounter any problems  with missing TensorFlow dependency on other platforms also try to install TF from this source.
 
 ```
 conda install -c jjhelmus tensorflow=0.10.0rc0
