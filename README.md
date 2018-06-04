@@ -50,8 +50,16 @@ If you still encounter problems with the new version, try to use smaller numbers
 - R 3.25
 
 - R packages:
-
   - [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html)
+
+For the perl scripts, especially `filter_sequences_by_length.pl`:
+
+- Perl 5 and modules:
+
+  - Bioperl ([installation instructions](https://bioperl.org/INSTALL.html))
+  - Getopt
+
+
 
 ## Installation
 
