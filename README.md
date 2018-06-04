@@ -71,6 +71,7 @@ Sometimes it can be also required to add default conda channel ([conda-forge](ht
 conda config --add channels conda-forge
 ```
 
+
 To exclude the possibility of dependencies conflicts its encouraged to create spearate conda environment for Plasflow using command:
 
 ```
