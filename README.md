@@ -14,6 +14,7 @@ PlasFlow is a set of scripts used for prediction of plasmid sequences in metagen
   - [Conda-based](#conda-based---recommended)
   - [Pip installer](#pip-installer)
   - [Manual installation](#manual-installation)
+  - [Perl modules for additional scripts](#perl-modules-for-additional-scripts)
 
 - [Getting started](#getting-started)
 
@@ -58,7 +59,6 @@ For the perl scripts, especially `filter_sequences_by_length.pl`:
 
   - Bioperl ([installation instructions](https://bioperl.org/INSTALL.html))
   - Getopt
-
 
 
 ## Installation
@@ -154,6 +154,22 @@ pip install numpy pandas scipy rpy2 scikit-learn biopython
 ```
 
 to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/html/Biostrings.html> and follow instructions therein.
+
+### Perl modules for additional scripts
+
+Perl scripts (like `filter_sequences_by_length.pl`) included with PlasFlow requires few Perl modules. THey can be easily installed using conda:
+
+```
+conda install -c bioconda perl -bioperl perl-getopt-long
+```
+
+or cpan:
+
+```
+cpan -i Bio::Perl Getopt::longer
+```
+
+or any package manager included in your system (apt, brew)
 
 ## Getting started
 
