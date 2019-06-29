@@ -41,18 +41,14 @@ parser.add_argument('--models', dest='models',
                     action='store', help='Custom models localization')
 parser.add_argument('--batch_size', dest='batch_size',
                     action='store', default=25000, help='Batch size for large datasets')
+parser.add_argument('--no_chkpt', help='Do not use checkpoints', action='store_true')
 
 args = parser.parse_args()
 
 import numpy as np
 import pandas as pd
-import rpy2
-from rpy2.robjects.packages import importr
-import rpy2.robjects as robjects
-from rpy2.robjects import pandas2ri
 import re
 from Bio import SeqIO
-import gc
 
 # srcipt path is required to find the location of models used for classification (script_path/models)
 script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -66,13 +62,6 @@ else:
 
 #store maximum number of sequence analyzed in the singl batch of kmer frequencies calculation
 max_sequences_per_batch = int(args.batch_size)
-
-#initialize rpy2
-r = robjects.r
-
-# import Biostrings package for kmer quantification
-biostrings = importr('Biostrings')
-base = importr('base')
 
 # import labels description
 if (args.labels):
@@ -95,6 +84,15 @@ pd_contigs_info = pd.DataFrame([
     {'contig_id': i, 'contig_name': rec.id, 'contig_length': len(rec.seq)}
     for i, rec in enumerate(seqs)
 ])
+
+
+def get_kmer_counts(seq, K):
+    """Return a list of kmers in a sequence."""
+    out = {}
+    for start in range(len(seq) - K + 1):
+        kmer = seq[start:start + K]
+        out[kmer] = 1 + out.get(kmer, 0)
+    return out
 
 
 #based on http://biopython.org/wiki/Split_large_file
@@ -143,25 +141,25 @@ class tf_classif:
         # set locations of models
         if (kmer == 5):
             if(hidden == "30"):
-                self.modeldir = models_path+ "/kmer5_split_30_neurons_relu/"
+                self.modeldir = models_path + "/kmer5_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = models_path+ "/kmer5_split_20_20_neurons_relu/"
+                self.modeldir = models_path + "/kmer5_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()
         elif (kmer == 6):
-            if(hidden == "30"):
-                self.modeldir = models_path+ "/kmer6_split_30_neurons_relu/"
+            if (hidden == "30"):
+                self.modeldir = models_path + "/kmer6_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = models_path+ "/kmer6_split_20_20_neurons_relu/"
+                self.modeldir = models_path + "/kmer6_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()
         elif (kmer == 7):
-            if(hidden == "30"):
-                self.modeldir = models_path+ "/kmer7_split_30_neurons_relu/"
+            if (hidden == "30"):
+                self.modeldir = models_path + "/kmer7_split_30_neurons_relu/"
             elif (hidden == "20_20"):
-                self.modeldir = models_path+ "/kmer7_split_20_20_neurons_relu/"
+                self.modeldir = models_path + "/kmer7_split_20_20_neurons_relu/"
             else:
                 print("Wrong hidden layers specification. Exiting...")
                 sys.exit()
@@ -175,45 +173,20 @@ class tf_classif:
         import os.path
         file_name = str(input_data_path) + "_kmer_" + str(kmer) + '_freqs.npy'
         # Try to load previously saved frequncies (TF-IDF transformed)
-        if os.path.isfile(file_name):
+        if (not args.no_chkpt) and os.path.isfile(file_name):
             test_tfidf_nd = np.load(file_name)
             self.no_features = test_tfidf_nd.shape[1]
             self.testing_data = test_tfidf_nd
             print("Succesfully read previously calculated kmer frequencies for kmer", kmer)
-        #if previous calculations are not available - calculate frequencies
+        # if previous calculations are not available - calculate frequencies
         else:
             print("Calculating kmer frequencies using kmer", kmer)
-            #if there is more sequences in input than it is allowed, split file in smaller chunks and process them separately
-            if (no_sequences>max_sequences_per_batch):
-                print("Due to large number of sequences in the input file, it is splitted to smaller chunks (maximum size: " + str(max_sequences_per_batch) + " sequences)")
-                #split input file:
-                record_iter = SeqIO.parse(open(input_data_path),"fasta")
-                for i, batch in enumerate(batch_iterator(record_iter, max_sequences_per_batch)):
-                    batch_filename = input_data_path + "_group_%i.fasta" % (i + 1)
-                    print("processing chunk:",str(i + 1))
-                    if os.path.isfile(batch_filename) is False: # if batch file not exists create one
-                        with open(batch_filename, "w") as handle:
-                            count = SeqIO.write(batch, handle, "fasta")
-                    #read
-                    temp_data = r.readDNAStringSet(batch_filename)
-                    kmer_count_temp = r.oligonucleotideFrequency(temp_data, kmer)
-                    kmer_count_temp_np = np.array(kmer_count_temp)
-                    #merge temporary matrices
-                    if i>0:
-                        kmer_count = np.concatenate((kmer_count,kmer_count_temp_np))
-                    else:
-                        kmer_count = kmer_count_temp_np
-            else:
-                #calculate single batch for low number of sequences
-                temp_data = r.readDNAStringSet(input_data_path)
-                kmer_count_r = r.oligonucleotideFrequency(temp_data, kmer)
-                kmer_count = np.array(kmer_count_r)
+            tbl = {}
+            for seq in seqs:
+                tbl[seq.id] = get_kmer_counts(seq.seq, self.kmer)
+            kmer_count = pd.DataFrame.from_dict(tbl, orient='index').values
+
             self.no_features = kmer_count.shape[1]
-            #Explicit garbage collection to remove unneccessary R objects from memory
-            r('rm(temp_data)')
-            r('rm(kmer_count_r)')
-            base.gc()
-            gc.collect()
 
             print("Transforming kmer frequencies")
             # Tfidf transform data
@@ -223,7 +196,8 @@ class tf_classif:
             test_tfidf_nd = test_tfidf.toarray()
             self.testing_data = test_tfidf_nd
             print("Finished transforming, saving transformed values")
-            np.save(file_name,test_tfidf_nd)
+            np.save(file_name, test_tfidf_nd)
+
     def predict_proba_tf(self, data):
         """Perform actual prediction (with probabilities)."""
         kmer = self.kmer
