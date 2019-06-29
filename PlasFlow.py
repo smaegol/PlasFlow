@@ -89,34 +89,13 @@ no_classes = labels_df.shape[0]
 inputfile = args.inputfile
 
 print("Importing sequences")
-# read data to classify and quanitify kmers
-input_data = r.readDNAStringSet(inputfile)
-no_sequences = r.length(input_data)[0]
-print("Imported ", no_sequences, " sequences")
-# get accessions of files
-accessions = r.sub("(\S*)\s.*", "\\1", r.names(input_data), perl=True)
+seqs = list(SeqIO.parse(inputfile, 'fasta'))
+print("Imported ", len(seqs), " sequences")
+pd_contigs_info = pd.DataFrame([
+    {'contig_id': i, 'contig_name': rec.id, 'contig_length': len(rec.seq)}
+    for i, rec in enumerate(seqs)
+])
 
-# create pandas frame with info about contigs (id, name, length)
-pd_accessions = pandas2ri.ri2py(accessions)
-pd_accessions = pd.DataFrame(pd_accessions)
-pd_accessions.index.name = 'contig_name'
-pd_accessions.reset_index(inplace=True)
-pd_accessions.columns = ['contig_id', 'contig_name']
-lengths = r.width(input_data)
-pd_lengths = pandas2ri.ri2py(lengths)
-pd_lengths = pd.DataFrame(pd_lengths)
-pd_lengths.index.name = 'contig_id'
-pd_lengths.reset_index(inplace=True)
-pd_lengths.columns = ['contig_id', 'contig_length']
-pd_contigs_info = pd.merge(pd_accessions, pd_lengths, on=['contig_id'])
-pd_contigs_info
-
-#Explicit garbage collection to remove unneccessary R objects from memory
-r('rm(input_data)')
-r('rm(accessions)')
-r('rm(lengths)')
-base.gc()
-gc.collect()
 
 #based on http://biopython.org/wiki/Split_large_file
 def batch_iterator(iterator, batch_size):
