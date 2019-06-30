@@ -1,9 +1,14 @@
 
 import os.path
 import tensorflow as tf
+import pandas as pd
+import numpy as np
+
+from os.path import join
 
 from .exceptions import UnavailableLayerSpecError, UnavailableKmerSpecError
 from .constants import MODELS_PATH
+from .utils import get_kmer_counts
 
 
 class Tf_Classif:
@@ -26,12 +31,12 @@ class Tf_Classif:
             '20_20': [20, 20]
         }[hidden]
 
-    def calculate_freq(self, input_data_path):
+    def calculate_freq(self, seqs, input_data_path, no_chkpt=True):
         """Calculate kmer frequencies and perform td-idf transformation."""
         kmer = self.kmer
         file_name = str(input_data_path) + "_kmer_" + str(kmer) + '_freqs.npy'
         # Try to load previously saved frequncies (TF-IDF transformed)
-        if (not args.no_chkpt) and os.path.isfile(file_name):
+        if (not no_chkpt) and os.path.isfile(file_name):
             test_tfidf_nd = np.load(file_name)
             self.no_features = test_tfidf_nd.shape[1]
             self.testing_data = test_tfidf_nd
@@ -56,11 +61,11 @@ class Tf_Classif:
             print("Finished transforming, saving transformed values")
             np.save(file_name, test_tfidf_nd)
 
-    def predict_proba_tf(self, data):
+    def predict_proba_tf(self, seqs, data):
         """Perform actual prediction (with probabilities)."""
         kmer = self.kmer
         if not hasattr(self, 'testing_data'):
-            self.calculate_freq(data)
+            self.calculate_freq(seqs, data)
 
         # import trained tensorflow model
         feature_columns = [tf.contrib.layers.real_valued_column(
@@ -76,10 +81,10 @@ class Tf_Classif:
         new_test_proba = classifier.predict_proba(self.testing_data)
         return new_test_proba
 
-    def predict(self, data):
+    def predict(self, seqs, data):
         """Perform actual prediction (Without probabilities)."""
         if not hasattr(self, 'testing_data'):
-            self.calculate_freq(data)
+            self.calculate_freq(seqs, data)
 
         # import trained tensorflow model
         feature_columns = [tf.contrib.layers.real_valued_column(

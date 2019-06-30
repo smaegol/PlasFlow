@@ -15,20 +15,20 @@ class TF_Vote_Classifier:
         self.clfs = clfs
         self.weights = weights
 
-    def predict_proba(self, X):
+    def predict_proba(self, seqs, X):
         """Return average probabilities."""
-        self.probas_ = [clf.predict_proba_tf(X) for clf in self.clfs]
+        self.probas_ = [clf.predict_proba_tf(seqs, X) for clf in self.clfs]
         print("Voting...")
         avg = np.average(self.probas_, axis=0, weights=self.weights)
 
         return avg
 
-    def predict(self, X):
+    def predict(self, seqs, X):
         """Perform actual prediction."""
-        self.classes_ = np.asarray([clf.predict(X) for clf in self.clfs])
+        self.classes_ = np.asarray([clf.predict(seqs, X) for clf in self.clfs])
 
         if self.weights:
-            avg = self.predict_proba_tf(X)
+            avg = self.predict_proba_tf(seqs, X)
 
             maj = np.apply_along_axis(lambda x: max(
                 enumerate(x), key=operator.itemgetter(1))[0], axis=1, arr=avg)
