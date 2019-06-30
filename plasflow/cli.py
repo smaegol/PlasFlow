@@ -24,7 +24,8 @@ parser.add_argument('--models', dest='models',
 parser.add_argument('--batch_size', dest='batch_size',
                     action='store', default=25000, help='Batch size for large datasets')
 parser.add_argument('--no_chkpt', help='Do not use checkpoints', action='store_true')
-
+parser.add_argument('--min_len', dest='min_length',
+                    action='store', default=1000, help='Minimum size for scaffolds')
 args = parser.parse_args()
 
 
@@ -32,7 +33,7 @@ def cli_main():
     labels_df = pd.read_csv(join(MODELS_PATH, 'class_labels_df.tsv'), sep="\t")
     if args.labels:
         labels_df = pd.read_csv(args.labels, sep="\t")
-    main(labels_df, args.inputfile, args.outputfile, args.threshold)
+    main(labels_df, args.inputfile, args.outputfile, args.threshold, min_length=args.min_length)
 
 
 if __name__ == '__main__':

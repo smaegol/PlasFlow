@@ -60,10 +60,10 @@ def predict(seqs, labels, inputfile):
     return pd_n, pd_n_proba
 
 
-def parse_seqs(inputfile):
+def parse_seqs(inputfile, min_length=1000):
     """Return a list of the seqs and a pandas dataframe with metadata."""
     print("Importing sequences")
-    seqs = list(SeqIO.parse(inputfile, 'fasta'))
+    seqs = [rec for rec in SeqIO.parse(inputfile, 'fasta') if len(rec.seq) >= min_length]
     print("Imported ", len(seqs), " sequences")
     contig_info = pd.DataFrame([
         {'contig_id': i, 'contig_name': rec.id, 'contig_length': len(rec.seq)}
@@ -110,8 +110,8 @@ def filter_results(results_merged, threshold):
     return results_merged
 
 
-def main(labels, inputfile, outputfile, threshold):
-    seqs, contig_info = parse_seqs(inputfile)
+def main(labels, inputfile, outputfile, threshold, min_length=1000):
+    seqs, contig_info = parse_seqs(inputfile, min_length=min_length)
     vote, vote_proba = predict(seqs, labels, inputfile)
 
     results_merged = pd.merge(vote, labels, on=['id'])
