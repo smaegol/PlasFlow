@@ -19,6 +19,7 @@ setuptools.setup(
         'scipy',
         'numpy',
         'biopython',
+        'sklearn',
     ],
     entry_points={
         'console_scripts': [

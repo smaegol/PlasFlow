@@ -17,7 +17,7 @@ class TF_Vote_Classifier:
 
     def predict_proba(self, seqs, labels, X):
         """Return average probabilities."""
-        self.probas_ = [clf.predict_proba_tf(seqs, labels, X) for clf in self.clfs]
+        self.probas_ = [list(clf.predict_proba_tf(seqs, labels, X)) for clf in self.clfs]
         print("Voting...")
         avg = np.average(self.probas_, axis=0, weights=self.weights)
 
