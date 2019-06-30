@@ -128,9 +128,11 @@ def main(labels, inputfile, outputfile, threshold):
         taxons[taxname] = taxons.get(taxname, 0) + 1
         plasmids[plasmid] = plasmids.get(taxname, 0) + 1
     plasmids = pd.DataFrame.from_dict(plasmids, orient="index").transpose()
-    print(f"\nResulting plasmid sequences prediction:\n{plasmids}")
+    print("\nResulting plasmid sequences prediction:")
+    print(plasmids)
     taxons = pd.DataFrame.from_dict(taxons, orient="index").transpose()
-    print(f"\nResulting taxonomical assignment:\n{taxons}")
+    print("\nResulting taxonomical assignment:")
+    print(taxons)
 
     print("\nOutputting fasta files with classified sequences")
     write_seqs(inputfile, outputfile, results_merged)
