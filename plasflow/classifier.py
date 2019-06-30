@@ -25,7 +25,7 @@ class Tf_Classif:
             raise UnavailableLayerSpecError(f'Layer {hidden} not available')
 
         self.kmer = kmer
-        self.model_dir = join(MODELS_PATH, f'kmer{kmer}_split_{hidden}_neurons_relu')
+        self.modeldir = join(MODELS_PATH, f'kmer{kmer}_split_{hidden}_neurons_relu')
         self.hidden = {
             '30': [30],
             '20_20': [20, 20]
