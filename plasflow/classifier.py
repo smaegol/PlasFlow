@@ -20,12 +20,12 @@ class Tf_Classif:
     def __init__(self, kmer, hidden):
         """Initialize the class using kmer length and hidden neurons comfiguration."""
         if kmer not in (5, 6, 7):
-            raise UnavailableKmerSpecError(f'k-mer length {kmer} not available')
+            raise UnavailableKmerSpecError('k-mer length ' + kmer + ' not available')
         if hidden not in ('30', '20_20'):
-            raise UnavailableLayerSpecError(f'Layer {hidden} not available')
+            raise UnavailableLayerSpecError('Layer ' + hidden + ' not available')
 
         self.kmer = kmer
-        self.model_dir = join(MODELS_PATH, f'kmer{kmer}_split_{hidden}_neurons_relu')
+        self.modeldir = join(MODELS_PATH, 'kmer' + kmer + '_split_' + hidden + '_neurons_relu')
         self.hidden = {
             '30': [30],
             '20_20': [20, 20]
