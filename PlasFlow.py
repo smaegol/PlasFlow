@@ -184,7 +184,7 @@ class tf_classif:
             tbl = {}
             for seq in seqs:
                 tbl[seq.id] = get_kmer_counts(seq.seq, self.kmer)
-            kmer_count = pd.DataFrame.from_dict(tbl, orient='index').values
+            kmer_count = pd.DataFrame.from_dict(tbl, orient='index').fillna(0).values
 
             self.no_features = kmer_count.shape[1]
 
