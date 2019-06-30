@@ -38,7 +38,7 @@ class Tf_Classif:
         # Try to load previously saved frequncies (TF-IDF transformed)
         if (not no_chkpt) and os.path.isfile(file_name):
             test_tfidf_nd = np.load(file_name)
-            self.no_features = test_tfidf_nd.shape[1]
+            self.num_features = test_tfidf_nd.shape[1]
             self.testing_data = test_tfidf_nd
             print("Succesfully read previously calculated kmer frequencies for kmer", kmer)
         # if previous calculations are not available - calculate frequencies
@@ -49,7 +49,7 @@ class Tf_Classif:
                 tbl[seq.id] = get_kmer_counts(seq.seq, self.kmer)
             kmer_count = pd.DataFrame.from_dict(tbl, orient='index').fillna(0).values
 
-            self.no_features = kmer_count.shape[1]
+            self.num_features = kmer_count.shape[1]
 
             print("Transforming kmer frequencies")
             # Tfidf transform data
@@ -61,18 +61,17 @@ class Tf_Classif:
             print("Finished transforming, saving transformed values")
             np.save(file_name, test_tfidf_nd)
 
-    def predict_proba_tf(self, seqs, data):
+    def predict_proba_tf(self, seqs, labels, data):
         """Perform actual prediction (with probabilities)."""
         kmer = self.kmer
         if not hasattr(self, 'testing_data'):
             self.calculate_freq(seqs, data)
 
         # import trained tensorflow model
-        feature_columns = [tf.contrib.layers.real_valued_column(
-            "", dimension=self.no_features)]
+        feature_columns = [tf.contrib.layers.real_valued_column("", dimension=self.num_features)]
         classifier = tf.contrib.learn.DNNClassifier(feature_columns=feature_columns,
                                                     hidden_units=self.hidden,
-                                                    n_classes=no_classes,
+                                                    n_classes=labels.shape[0],
                                                     model_dir=self.modeldir)
 
         print("Predicting labels using kmer", kmer, " frequencies")
@@ -81,17 +80,16 @@ class Tf_Classif:
         new_test_proba = classifier.predict_proba(self.testing_data)
         return new_test_proba
 
-    def predict(self, seqs, data):
+    def predict(self, seqs, labels, data):
         """Perform actual prediction (Without probabilities)."""
         if not hasattr(self, 'testing_data'):
             self.calculate_freq(seqs, data)
 
         # import trained tensorflow model
-        feature_columns = [tf.contrib.layers.real_valued_column(
-            "", dimension=self.no_features)]
+        feature_columns = [tf.contrib.layers.real_valued_column("", dimension=self.num_features)]
         classifier = tf.contrib.learn.DNNClassifier(feature_columns=feature_columns,
                                                     hidden_units=self.hidden,
-                                                    n_classes=no_classes,
+                                                    n_classes=labels.shape[0],
                                                     model_dir=self.modeldir)
 
         # predict classes

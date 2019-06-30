@@ -37,14 +37,14 @@ from .constants import MODELS_PATH
 from .utils import re_select_columns
 
 
-def predict(seqs, inputfile):
+def predict(seqs, labels, inputfile):
     vote_class = TF_Vote_Classifier(clfs=[
         Tf_Classif(5, "20_20"),
         Tf_Classif(6, "20_20"),
         Tf_Classif(7, "30"),
     ])
-    vote_proba = vote_class.predict_proba(seqs, inputfile)
-    vote = vote_class.predict(seqs,inputfile)
+    vote_proba = vote_class.predict_proba(seqs, labels, inputfile)
+    vote = vote_class.predict(seqs, labels, inputfile)
     # results pandas dataframe:
     pd_n = pd.DataFrame(vote)
     # add columns with contig_id
@@ -112,7 +112,7 @@ def filter_results(results_merged, threshold):
 
 def main(labels, inputfile, outputfile, threshold):
     seqs, contig_info = parse_seqs(inputfile)
-    vote, vote_proba = predict(seqs, inputfile)
+    vote, vote_proba = predict(seqs, labels, inputfile)
 
     results_merged = pd.merge(vote, labels, on=['id'])
     results_merged = pd.merge(results_merged, vote_proba, on=['contig_id'])
