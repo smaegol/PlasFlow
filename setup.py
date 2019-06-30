@@ -18,6 +18,7 @@ setuptools.setup(
         'pandas',
         'scipy',
         'numpy',
+        'biopython',
     ],
     entry_points={
         'console_scripts': [
