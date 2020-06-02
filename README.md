@@ -160,7 +160,7 @@ to install R Biostrings go to <https://bioconductor.org/packages/release/bioc/ht
 Perl scripts (like `filter_sequences_by_length.pl`) included with PlasFlow requires few Perl modules. THey can be easily installed using conda:
 
 ```
-conda install -c bioconda perl -bioperl perl-getopt-long
+conda install -c bioconda perl-bioperl perl-getopt-long
 ```
 
 or cpan:
