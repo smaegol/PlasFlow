@@ -30,5 +30,5 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
     ],
-    package_data={'models': ['models/*']},
+    package_data={'plasflow': ['models/*']},
 )
