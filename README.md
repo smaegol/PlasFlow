@@ -1,6 +1,10 @@
 [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/installer/conda.svg)](https://anaconda.org/smaegol/plasflow) [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/platforms.svg)](https://anaconda.org/smaegol/plasflow) [![Anaconda-Server Badge](https://anaconda.org/smaegol/plasflow/badges/downloads.svg)](https://anaconda.org/smaegol/plasflow)
 [![PyPI](https://img.shields.io/pypi/v/plasflow.svg)](https://pypi.org/project/plasflow/1.1.0/)
 
+# NOT MAINTAINED
+
+Use at your own risk. I am very grateful that it is being widely used but, as I completely changed my research area I cannot give my time to maintain this project. There are other, newer packages developed, which can be used instead. 
+
 # PlasFlow 1.1
 
 PlasFlow is a set of scripts used for prediction of plasmid sequences in metagenomic contigs. It relies on the neural network models trained on full genome and plasmid sequences and is able to differentiate between plasmids and chromosomes with accuracy reaching 96%. It outperforms other available solutions for plasmids recovery from metagenomes and incorporates the thresholding which allows for exclusion of incertain predictions. PlasFlow has been published in _Nucleic Acids Research_ (https://doi.org/10.1093/nar/gkx1321).
